@@ -1,0 +1,10 @@
+version: "3.7"
+services:
+  envoy:
+    image: envoyproxy/envoy-alpine
+    ports:
+    - 9901:9901
+    - 10000:10000
+    volumes:
+    - "./bootstrap-rds.yml:/bootstrap.yaml"
+    entrypoint: tail -f /etc/hosts

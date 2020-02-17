@@ -1,0 +1,110 @@
+admin:
+  access_log_path: /tmp/admin_access.log
+  address:
+    socket_address: { address: 0.0.0.0, port_value: 9901 }
+
+static_resources:
+  listeners:
+    - name: listener_0
+      address:
+        socket_address: { address: 0.0.0.0, port_value: 10000 }
+      filter_chains:
+        - filters:
+            - name: envoy.http_connection_manager
+              config:
+                stat_prefix: downstream_cx_total
+                codec_type: AUTO
+                # access_log:
+                #   name: envoy.file_access_log
+                #   config:
+                #     path: /dev/stdout
+                route_config:
+                  name: local_route
+                  virtual_hosts:
+                    - name: local_service
+                      per_filter_config:
+                        envoy.ext_authz:
+                          check_settings:
+                            context_extensions:
+                              virtual_host: local_service
+                      domains: ["*"]
+                      require_tls: NONE
+                      routes:
+                        - match:
+                            prefix: "/LoginService"
+                          route: { cluster: user_service }
+                        - match:
+                            prefix: "/ProjectService"
+                          route: { cluster: user_service }
+                        - match:
+                            prefix: "/FileService"
+                          route: { cluster: user_service }
+                        - match:
+                            prefix: "/SystemService"
+                          route: { cluster: user_service }
+                      cors:
+                        allow_origin_string_match:
+                          - safe_regex:
+                              google_re2:
+                                max_program_size: 100
+                              regex: ".*"
+                        allow_methods: "*"
+                        allow_headers: "*"
+                        expose_headers: "*"
+
+                http_filters:
+                  - name: envoy.grpc_web
+                  - name: envoy.cors
+                  - name: envoy.ext_authz
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.config.filter.http.ext_authz.v2.ExtAuthz
+                      http_service:
+                        server_uri:
+                          uri: 10.0.0.101:8001
+                          cluster: ext-authz
+                          timeout: 0.25s
+                        # path_prefix: "/"
+                        authorization_request:
+                          allowed_headers:
+                            patterns:
+                              - exact: "Authorization"
+                      failure_mode_allow: false
+                      include_peer_certificate: false
+
+                  - name: envoy.router
+  clusters:
+    - name: ext-authz
+      connect_timeout: 0.25s
+      type: logical_dns
+      lb_policy: round_robin
+      load_assignment:
+        cluster_name: ext-authz
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: 10.0.0.101
+                      port_value: 8000
+    # - name: ext-authz
+    #   # http2_protocol_options: {}
+    #   connect_timeout: 0.25s
+    #   lb_policy: ROUND_ROBIN
+    #   type: strict_dns
+    #   hosts:
+    #     - socket_address:
+    #         address: 10.0.0.101
+    #         port_value: 8000
+    - name: user_service
+      connect_timeout: 5s
+      type: STRICT_DNS
+      http2_protocol_options: {}
+      load_assignment:
+        cluster_name: local_grpc
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: 172.81.231.124
+                      port_value: 80
