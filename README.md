@@ -6,6 +6,7 @@ A code demo gather.
 <!-- vscode-markdown-toc -->
 * 1. [elastic](#elastic)
 * 2. [envoy](#envoy)
+* 3. [Kubernetes](#Kubernetes)
 
 <!-- vscode-markdown-toc-config
 	numbering=true
@@ -75,3 +76,6 @@ A code demo gather.
     ├── rds
     └── vendor
 ```
+
+##  3. <a name='Kubernetes'></a>Kubernetes
+> cli简单用法， go.mod正确
