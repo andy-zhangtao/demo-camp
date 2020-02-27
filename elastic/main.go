@@ -44,8 +44,7 @@ func main() {
 		elastic.SetHttpClient(c),
 		elastic.SetURL("https://192.168.2.188:9200"),
 		elastic.SetScheme("https"),
-		elastic.SetMaxRetries(10),
-		elastic.SetBasicAuth("user", "passwd"),
+		elastic.SetBasicAuth("xxxx", "xxxx"),
 	)
 
 	if err != nil {
@@ -92,4 +91,8 @@ func main() {
 		// No hits
 		fmt.Print("Found no tweets\n")
 	}
+
+	fmt.Println("range demo")
+
+	rangeDemoWithFields(client)
 }
