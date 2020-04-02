@@ -1,0 +1,19 @@
+# github.com/PuerkitoBio/goquery v1.5.1
+## explicit
+github.com/PuerkitoBio/goquery
+# github.com/andybalholm/cascadia v1.1.0
+github.com/andybalholm/cascadia
+# github.com/dghubble/oauth1 v0.6.0
+## explicit
+github.com/dghubble/oauth1
+# github.com/tumblr/tumblr.go v1.0.0
+## explicit
+github.com/tumblr/tumblr.go
+# github.com/tumblr/tumblrclient.go v1.0.0
+## explicit
+github.com/tumblr/tumblrclient.go
+# golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e
+## explicit
+golang.org/x/net/context
+golang.org/x/net/html
+golang.org/x/net/html/atom
