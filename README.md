@@ -79,3 +79,6 @@ A code demo gather.
 
 ##  3. <a name='Kubernetes'></a>Kubernetes
 > cli简单用法， go.mod正确
+
+## 4. Tumblr API Demo
+> 简单使用Tumblr的SDK使用方式
