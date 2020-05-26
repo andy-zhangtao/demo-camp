@@ -20,6 +20,7 @@ func main() {
 		panic(err)
 	}
 
+	<-make(chan int)
 }
 
 func newMongoCli(addr string) (cli *mongo.Client, err error) {
@@ -27,7 +28,7 @@ func newMongoCli(addr string) (cli *mongo.Client, err error) {
 
 	logrus.Debugf("mongo: %s", addr)
 
-	client, err := mongo.NewClient(options.Client().ApplyURI(addr))
+	client, err := mongo.NewClient(options.Client().ApplyURI(addr), options.Client().SetMaxPoolSize(30), options.Client().SetMaxConnIdleTime(1*time.Minute), options.Client().SetMinPoolSize(10))
 	if err != nil {
 		return nil, err
 	}
